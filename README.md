@@ -1,3 +1,9 @@
+<br>
+
+[![Button Acosom]][LinkAcosom] [![Button Twitter]][LinkTwitter] [![Button Linkedin]][LinkLinkedin]
+
+<br>
+
 ## :bulb: Introduction
 
 In this new blog post, we build on the [infrastructure](https://github.com/theodorecurtil/kafka_101) and the [Kafka producer](https://github.com/theodorecurtil/kafka_sales_producer) introduced in the first two blog posts of our **Kafka 101 Tutorial** series. We simulate a company receiving sales events from its many physical stores inside its Kafka infrastructure, and we introduce the basic [Apache Flink](https://flink.apache.org/) architecture to do streaming analytics on top of these sales events.
@@ -137,3 +143,13 @@ docker-compose down
 ## :next_track_button: What is coming next?
 
 In this blog post, we saw how to build on the previously developed Kafka infrastructure to start playing around with Apache Flink, using the SQL API. In a next blog post, we will see how to replicate the Flink job we wrote today using the Java API, enabling the design of more complex jobs. Stay tuned! :radio:
+
+<!---------------------------------------------------------------------------->
+
+[Button Acosom]: https://img.shields.io/badge/Acosom-Read%20blog%20post-orange
+[Button Twitter]: https://img.shields.io/twitter/follow/theodore_curtil?style=social
+[Button Linkedin]: https://img.shields.io/badge/LinkedIn-Follow%20Acosom-blue
+
+[LinkAcosom]: https://acosom.com/blog 'Read on acosom.com'
+[LinkTwitter]: https://twitter.com/theodore_curtil 'Follow me on Twitter :)'
+[LinkLinkedin]: https://ch.linkedin.com/company/acosom 'Follow us on LinkedIn :)'
