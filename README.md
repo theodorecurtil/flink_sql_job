@@ -122,3 +122,13 @@ You can see the job running on the main view of the UI, and then see more detail
 
 ![](./pictures/flink-job.png)
 
+Finally, to close the loop, let us check that our output stream is indeed sinked to Kafka! Flink writes - produces - to the **SALES_AGGREGATE** topic. The topic is automatically created when Flink starts producing to it - as we alliwed automatic topic creation on our Kafka cluster - and the corresponding schemas are registered in the schema registry. Go to the Confluent Control Center at [localhost:9021](http://localhost:9021/clusters) and navigate to the `Topics` tab and then to the **SALES_AGGREGATE**. You should see messages being published every minute - as this is the length of our aggregating window.
+
+![](./pictures/topic-aggregate-sales.png)
+
+
+
+
+
+
+
