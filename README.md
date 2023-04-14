@@ -40,3 +40,38 @@ docker-compose up -d
 This will bring up the Kafka infrastructure we are familiar with, as well as the Kafka sales producer we introduced in our latest blog post. The producer starts producing immediately at a frequency of 1 message per second. You can check that everything is running properly by navigating to the Confluent Control Center UI on [localhost:9021](http://localhost:9021/clusters). Then go to the `Topics` tab and click the **SALES** topic. This is the topic the Kafka producer is producing to. You should see something similar to the following.
 
 ![](./pictures/topic-sales.png)
+
+:chipmunk: You might spot from the [docker-compose](https://github.com/theodorecurtil/flink_sql_job/blob/main/docker-compose.yaml) file that 3 services are spawned at the end of the file, that seem Flink related.
+
+```console
+version: '3.3'
+services:
+  ...
+    
+  jobmanager:
+    ...
+
+  taskmanager:
+    ...
+
+  sql-client:
+    ...
+```
+
+The `jobmanager` container supports the Flink Job Manager, and the `taskmanager` the Flink Task Manager. For a reminder or a crash course about the Flink architecture, check [this link](https://nightlies.apache.org/flink/flink-docs-master/docs/concepts/flink-architecture/). Basically, a Flink cluster is composed of a job manager and one or multiple task managers. The job manager is responsible for distributing the work to the task managers, and task managers do the actual work.
+
+The third service - `sql-client` - is the SQL client that will allow us to submit SQL jobs to our Flink cluster. In a typical production environment, Flink jobs will be designed using the Java/Scala API, and there is no need for the SQL client. For test cases, this SQL client remains convenient.
+
+Flink ships with a very nice UI. You can access it on [localhost:18081](http://localhost:18081/#/overview). If you follow this link, you should see something like the following
+
+![](./pictures/flink-ui.png)
+
+You can see that 1 task manager is registered - since we started a single task manager container - with 2 available task slots and 0 running job. There are 2 task slots as we specifically created 1 task manager with 2 task slots - `taskmanager.numberOfTaskSlots: 2` config in the `taskmanager` - totalling to 2 task slots.
+
+## :zap: Let's do some streaming analytics
+
+Now that everything is up and running is time to showcase the power of Apache Flink.
+
+As a reminder, we have a Kafka producer producing fake sales records for 3 stores, every second. One possible analytics would be to aggregate the total sales per store to compare which stores make more sales than others. And because why not, let us aggregate per 1-minute time window as well, using tumbling windows. Tumbling windows have a fixed time length and do not overlap. The picture from Flink documentation illustrates this very well.
+
+![](https://nightlies.apache.org/flink/flink-docs-master/fig/tumbling-windows.svg)
