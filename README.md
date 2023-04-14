@@ -114,7 +114,7 @@ Shutting down the session...
 done.
 ```
 
-where the Job ID would be different for you, as it is randomly generated. We can also see that the job is running by going to the Flink UI on [localhost:18081](http://localhost:18081/#/overview)
+where the Job ID would be different for you, as it is randomly generated. We can also see that the job is running by going to the Flink UI on [localhost:18081](http://localhost:18081/#/overview).
 
 You can see the job running on the main view of the UI, and then see more details about the running job.
 
