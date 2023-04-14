@@ -126,9 +126,14 @@ Finally, to close the loop, let us check that our output stream is indeed sinked
 
 ![](./pictures/topic-aggregate-sales.png)
 
+## :skull_and_crossbones: Tear the infrastructure down
 
+Once we are done playing around with our toy example, it is easy to stop all processes. Simply type the following command
 
+```bash
+docker-compose down
+```
 
+## :next_track_button: What is coming next?
 
-
-
+In this blog post, we saw how to build on the previously developed Kafka infrastructure to start playing around with Apache Flink, using the SQL API. In a next blog post, we will see how to replicate the Flink job we wrote today using the Java API, enabling the design of more complex jobs. Stay tuned! :radio:
