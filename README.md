@@ -75,3 +75,50 @@ Now that everything is up and running is time to showcase the power of Apache Fl
 As a reminder, we have a Kafka producer producing fake sales records for 3 stores, every second. One possible analytics would be to aggregate the total sales per store to compare which stores make more sales than others. And because why not, let us aggregate per 1-minute time window as well, using tumbling windows. Tumbling windows have a fixed time length and do not overlap. The picture from Flink documentation illustrates this very well.
 
 ![](https://nightlies.apache.org/flink/flink-docs-master/fig/tumbling-windows.svg)
+
+Our output stream from Flink will be 1 data point per store per minute. For this specific use case, we will feed the data stream back to Kafka in a new topic, but Flink also supports sinking to a SQL database for example, or also custom sinks such as a Redis sink; depends on the requirements. I like sinking back to Kafka to have a centralized stream catalog, I find it easier on the consumer/downstream side.
+
+The logic is implemented in a [.sql](https://github.com/theodorecurtil/flink_sql_job/blob/main/sql-jobs/sales-aggregate.sql) file. Source and sink tables are created, and then the logic is very simple for this use case
+
+```console
+SELECT store_id, window_start, window_end, sum(sale_amount) as aggregated_sales
+FROM TABLE(TUMBLE(TABLE SALES, DESCRIPTOR(sale_ts), INTERVAL '60' SECONDS))
+GROUP BY store_id, window_start, window_end;
+```
+
+This very simple SQL expression tells Flink to assign sales events to time buckets (those 1-minute-wide tumbling windows), and to then compute the total sales per `store_id` per `window_start` timestamp.
+
+We are using the actual timestamps of the sales events to measure time and group observations; this is refered to as event time in Flink. Flink supports another type of time to keep track of time and ordered events: processing time. With event time, events flowing into Flink carry their timestamps (like the exact timestamps when the sales happened).
+
+### :chipmunk: Start the Flink job
+
+To start the Flink job, we need to enter the `sql-client` container and start the job manually by passing the `.sql` file. To start the job, type the following commands
+
+```bash
+## Enter the SQL client
+docker exec -it sql-client bash
+
+## Start the job
+flink@sql-client~$ sql-client.sh -f sales-aggregate.sql
+```
+
+The SQL client should then show the following output
+
+```bash
+[INFO] SQL update statement has been successfully submitted to the cluster:
+Job ID: c984a31a8e94fd41025f55621c2f7d02
+
+
+Flink SQL> 
+Shutting down the session...
+done.
+```
+
+where the Job ID would be different for you, as it is randomly generated. We can also see that the job is running by going to the Flink UI on [localhost:18081](http://localhost:18081/#/overview)
+
+You can see the job running on the main view of the UI, and then see more details about the running job.
+
+![](./pictures/flink-ui-job.png)
+
+![](./pictures/flink-job.png)
+
