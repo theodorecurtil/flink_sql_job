@@ -21,7 +21,7 @@ CREATE TABLE SALES (
     ) WITH (
       'connector' = 'kafka',
       'topic' = 'SALES',
-      'properties.bootstrap.servers' = 'broker:29092',
+      'properties.bootstrap.servers' = 'kafka_broker:29092',
       'format' = 'avro-confluent',
       'avro-confluent.url' = 'http://schema-registry:8081',
       'properties.group.id' = 'flink-sales',
@@ -39,7 +39,7 @@ CREATE TABLE SALES_AGGREGATE (
     ) WITH (
       'connector' = 'upsert-kafka',
       'topic' = 'SALES_AGGREGATE',
-      'properties.bootstrap.servers' = 'broker:29092',
+      'properties.bootstrap.servers' = 'kafka_broker:29092',
       'value.format' = 'avro-confluent',
       'value.avro-confluent.url' = 'http://schema-registry:8081',
       'key.format' = 'avro-confluent',
